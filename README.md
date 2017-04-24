@@ -8,8 +8,6 @@ Don't worry if you don't know how to or if you are just lazy making one,this pac
 
 ## Usage
 
-(I currently haven't submitted this to npm. So you can just download this instead or clone it temporarily)
-
 ```
 <template>
   <flexi-table-tools label="customer" link="/admin/customers/create" v-on:search="onSearch"></flexi-table-tools>
