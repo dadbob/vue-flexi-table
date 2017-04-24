@@ -1,0 +1,26 @@
+{
+  "name": "vue-flexi-table",
+  "version": "1.0.0",
+  "description": "A flexible table component for Vue.js",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:xxRockOnxx/vue-flexi-table.git"
+  },
+  "dependencies": {
+    "bulma": "^0.4.1",
+    "font-awesome": "^4.7.0",
+    "sifter": "^0.5.2",
+    "vue": "^2.2.6",
+    "vue-router": "^2.3.1"
+  },
+  "keywords": [
+    "vue-flexi-table"
+  ],
+  "author": "xxRockOnxx",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/xxRockOnxx/vue-flexi-table/issues"
+  },
+  "homepage": "https://github.com/xxRockOnxx/vue-flexi-table#readme"
+}
