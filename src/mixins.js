@@ -8,13 +8,13 @@ export default {
 
   methods: {
     dtGoNext () {
-      if (this.page < this.dtTotalPages) {
+      if (this.dtPage < this.dtTotalPages) {
         this.dtPage++
       }
     },
 
     dtGoPrev () {
-      if (this.page > 1) {
+      if (this.dtPage > 1) {
         this.dtPage--
       }
     },
@@ -26,7 +26,7 @@ export default {
     },
 
     dtLengthChange (length) {
-      this.dtPerPage = length
+      this.dtPerPage = Number(length)
     },
   },
 
@@ -36,7 +36,9 @@ export default {
     },
 
     dtTotalPages () {
-      return this.dtTotalRecords / this.dtPerPage
+      const pages = this.dtTotalRecords / this.dtPerPage
+
+      return Number.isInteger(pages) ? pages : parseInt(pages) + 1
     },
 
     /* Starting row number of current page */
@@ -51,54 +53,59 @@ export default {
 
     /* Create pagination numbers */
     dtPagination () {
-      /* Minimum ajacent page number on both sides */
-      const ADJACENT_PAGINATION = 3
-
-      /* Max pagination links (and when to show ellipsis) */
+      /* This implementation is fixed on this value */
       const MAX_PAGINATION = 10
+      let pages = []
 
-      /* Always append first page */
-      let pages = [1]
-
-      /**
-       *  We need to show ellipsis when total pages exceed the limit
-       */
+      /* We need to show ellipsis when total pages exceed the limit */
       if (this.dtTotalPages > MAX_PAGINATION) {
         /**
-         *  Append left adjacent pages only if page is greater than 2
-         *  else nothing actually is being computed
+         *  We are within the MAX_PAGINATION LIMIT
+         *  Subtracted 2 because it is for ('', {last page})
          */
-        if (this.dtPage > 2) {
-          pages.push('') // ellipsis
-          for (let i = this.dtPage - ADJACENT_PAGINATION; i < this.dtPage; i++) {
+        if (this.dtPage < MAX_PAGINATION - 2) {
+          for (let i = 1; pages.length < MAX_PAGINATION - 2; i++) {
             pages.push(i)
           }
+
+          pages = pages.concat(['', this.dtTotalPages])
         }
 
-        /**
-         *  Append current page and right adjancent.
-         *  also fills up remaining pages in case left adjacent did not complete.
-         *  subtracted 1 because last value will be the this.totalPages
-         */
-        for (let i = this.dtPage; pages.length < (MAX_PAGINATION - 1); i++) {
-          if (i > this.dtTotalPages) {
-            pages.push(i)
+        /* We are within beyond right ellipsis pages */
+        else {
+          /**
+           *  Next page is 2nd to the last page and up
+           *  No need for right ellipsis.
+           */
+          if ((this.dtPage + 1) >= (this.dtTotalPages - 1)) {
+            let rightPages = []
+            for (let i = this.dtPage; i <= this.dtTotalPages; i++) {
+              rightPages.push(i)
+            }
+
+            let leftPages = []
+            /* Subtracted 2 because it is for (1, '', {right pages}) */
+            for (let i = this.dtPage - 1; (leftPages.length + rightPages.length) < MAX_PAGINATION - 2; i--) {
+              leftPages.push(i)
+            }
+
+            pages = [1, '', ...leftPages.reverse(), ...rightPages]
+          } else {
+            /**
+             *  Subtracted 6 because it is for: 
+             *  (1, '', {current page}, {next page}, '', {last page})
+             */
+            let leftPages = []
+            for (let i = this.dtPage - 1; leftPages.length < MAX_PAGINATION - 6; i--) {
+              leftPages.push(i)
+            }
+
+            pages = [1, '', ...leftPages.reverse(), this.dtPage, this.dtPage + 1, '', this.dtTotalPages]
           }
         }
-
-        /**
-         *  Current last page in `pages` array is not
-         *  the number of total pages. We add ellipsis.
-         */
-        if (pages.slice(-1)[0] !== this.dtTotalPages - 1) {
-          pages.push('')
-        }
-
-        /* Always append the max page as the last page */
-        pages.push(this.dtTotalPages)
       } else {
-        for (let i = 2; i <= this.dtTotalPages; i++) {
-          pages.append(i)
+        for (let i = 1; i <= this.dtTotalPages; i++) {
+          pages.push(i)
         }
       }
 
