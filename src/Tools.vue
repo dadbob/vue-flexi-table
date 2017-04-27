@@ -46,14 +46,25 @@
   }
 </script>
 
-<style lang="scss">
-  @import '~bulma/sass/utilities/variables';
-  @import '~bulma/sass/utilities/controls';
-  @import '~bulma/sass/utilities/mixins';
+<style lang="scss" scoped>
+  @import '~bulma/sass/utilities/all';
   @import '~bulma/sass/elements/form';
+  @import '~bulma/sass/elements/icon';
+  @import '~bulma/sass/elements/button';
   @import '~bulma/sass/components/level';
 
   .table-tools {
+    box-sizing: border-box;
     margin-bottom: 1rem;
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit
+    }
+
+    a {
+      text-decoration: none;
+    }
   }
 </style>

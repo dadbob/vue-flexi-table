@@ -1,41 +1,37 @@
 <template>
-  <div>
-    <div class="table-container">
-      <table class="table">
-        <thead>
-          <slot name="header">
-            <tr>
-              <th v-for="column in columns" v-text="column.text"></th>
-            </tr>
-          </slot>
-        </thead>
+  <table class="table">
+    <thead>
+      <slot name="header">
+        <tr>
+          <th v-for="column in columns" v-text="column.text"></th>
+        </tr>
+      </slot>
+    </thead>
 
-        <tbody>
-          <tr v-if="loading">
-            <td :colspan="columns.length" style="text-align: center;">Loading Data</td>
-          </tr>
+    <tbody>
+      <tr v-if="loading">
+        <td :colspan="columns.length" style="text-align: center;">Loading Data</td>
+      </tr>
 
-          <tr v-else-if="computedRows.length === 0">
-            <td :colspan="columns.length" style="text-align: center;">No Available Data</td>
-          </tr>
+      <tr v-else-if="computedRows.length === 0">
+        <td :colspan="columns.length" style="text-align: center;">No Available Data</td>
+      </tr>
 
-          <tr v-else v-for="row in computedRows">
-            <slot v-for="column in columns" :name="column.name" :value="row[column.name]">
-              <td v-html="row[column.name]"></td>
-            </slot>
-          </tr>
-        </tbody>
+      <tr v-else v-for="row in computedRows">
+        <slot v-for="column in columns" :name="column.name" :value="row[column.name]">
+          <td v-html="row[column.name]"></td>
+        </slot>
+      </tr>
+    </tbody>
 
-        <tfoot>
-          <slot name="footer">
-            <tr>
-              <th v-for="column in columns" v-text="column.text"></th>
-            </tr>
-          </slot>
-        </tfoot>
-      </table>
-    </div>
-  </div>
+    <tfoot>
+      <slot name="footer">
+        <tr>
+          <th v-for="column in columns" v-text="column.text"></th>
+        </tr>
+      </slot>
+    </tfoot>
+  </table>
 </template>
 
 <script>
@@ -90,7 +86,7 @@
 
         results: [], // Filled with rows returned by search method
 
-        sifter: new Sifter([]), // Used for searching locally
+        sifter: new Sifter(this.rows), // Used for searching locally
       }
     },
 
@@ -106,9 +102,7 @@
           return this.results
         }
 
-        const end = this.perPage * this.page
-        const start = this.page === 1 ? 0 : (end / this.page)
-        return this.rows.slice(start, end)
+        return this.rows.slice(this.start - 1, this.end)
       },
 
       computedSearchSettings () {
@@ -121,6 +115,20 @@
 
       hasQuery () {
         return this.query.length > 0 || !!this.query.trim()
+      },
+
+      totalRecords () {
+        return this.rows.length
+      },
+
+      /* Starting row number of current page */
+      start () {
+        return (this.totalRecords === 0) ? 0 : (this.page * this.perPage) - (this.perPage - 1)
+      },
+
+      /* Ending row number of current page */
+      end () {
+        return (this.page * this.perPage > this.totalRecords) ? this.totalRecords : this.page * this.perPage
       }
     },
 
@@ -142,6 +150,10 @@
           throw "Search fields cannot be empty."
         }
       },
+
+      onSearch: debounce(function () {
+        this.doSearch()
+      }, 250),
 
       /**
        *  Supposed to be named as `search` but is already used as a prop name
@@ -173,7 +185,7 @@
     watch: {
       query: function (newVal) {
         this.loading = true
-        debounce(this.doSearch, 250)
+        this.onSearch()
       },
 
       rows: function (newVal) {
@@ -183,10 +195,15 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import '~bulma/sass/utilities/variables';
   @import '~bulma/sass/elements/table';
 
+  .table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  
   .table th, .table td {
     vertical-align: middle !important;
   }

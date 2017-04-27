@@ -80,8 +80,16 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import '~bulma/sass/utilities/all';
   @import '~bulma/sass/components/pagination';
   @import '~bulma/sass/elements/button';
+
+  .pagination.list {
+    padding: 0;
+  }
+
+  .pagination.list > li {
+    list-style-type: none;
+  }
 </style>

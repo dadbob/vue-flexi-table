@@ -26,7 +26,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import '~bulma/sass/utilities/variables';
   @import '~bulma/sass/utilities/controls';
   @import '~bulma/sass/utilities/mixins';
