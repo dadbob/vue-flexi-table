@@ -6,6 +6,9 @@ Don't worry if you don't know how to or if you are just lazy making one,this pac
 
 ![screenshot](https://raw.githubusercontent.com/xxRockOnxx/vue-flexi-table/master/screenshot.png)
 
+## Demo
+The Live demo can be found here: https://xxrockonxx.github.io/vue-flexi-table/demo/index.html
+
 ## Usage
 
 ```
