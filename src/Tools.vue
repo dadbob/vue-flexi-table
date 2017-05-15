@@ -1,30 +1,22 @@
 <template>
   <div class="table-tools">
-    <slot>
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <div class="field">
-              <div class="control has-icons-right">
-                <input class="input" type="text" :placeholder="`Find a ${label}`" v-on:input="onSearch">
-                <span class="icon is-small is-right">
-                  <i class="fa fa-search"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
-            <router-link class="button is-success" :to="link">Create {{ label }}</router-link>
-          </div>
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item"><span class="table-title">{{ formattedLabel }}</span></div>
+      </div>
+      <div class="level-right">
+        <div class="level-item"><search v-on:search="onSearch"></search></div>
+        <div class="level-item">
+          <router-link class="button is-success" :to="link">Create {{ label }}</router-link>
         </div>
       </div>
-    </slot>
+    </div>
   </div>
 </template>
 
 <script>
+  import Search from './Search'
+
   export default {
     props: {
       label: {
@@ -38,9 +30,19 @@
       }
     },
 
+    components: {
+      Search
+    },
+
+    computed: {
+      formattedLabel () {
+        return this.label[0].toUpperCase() + this.label.substr(1)
+      }
+    },
+
     methods: {
-      onSearch: function (event) {
-        this.$emit('search', event.target.value)
+      onSearch: function (query) {
+        this.$emit('search', query)
       }
     }
   }
@@ -55,7 +57,7 @@
 
   .table-tools {
     box-sizing: border-box;
-    margin-bottom: 1rem;
+    width: 100%;
 
     *,
     *:before,
@@ -66,5 +68,10 @@
     a {
       text-decoration: none;
     }
+  }
+
+  .table-title {
+    font-size: 1.5rem;
+    font-weight: 700;
   }
 </style>

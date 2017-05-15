@@ -31,7 +31,7 @@ export default {
   },
 
   computed: {
-    dtTotalRecords () {
+    dtTotalRecords () { 
       return this.dtRows.length
     },
 
@@ -53,6 +53,8 @@ export default {
 
     /* Create pagination numbers */
     dtPagination () {
+      if (this.dtTotalPages === 0 || this.dtTotalPages === 1) return [1];
+
       /* This implementation is fixed on this value */
       const MAX_PAGINATION = 10
       let pages = []
